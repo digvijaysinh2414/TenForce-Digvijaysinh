@@ -12,8 +12,31 @@ namespace Test_Taste_Console_Application.Domain.Objects
         public ICollection<Moon> Moons { get; set; }
         public float AverageMoonGravity
         {
-            get => 0.0f;
+            get
+            {
+                if (Moons == null || Moons.Count == 0)
+                {
+                    // Handle the case where there are no moons
+                    return 0.0f;
+                }
+
+                float totalGravity = 0.0f;
+
+                foreach (var moon in Moons)
+                {
+                    totalGravity += moon.Gravity;
+                }
+
+                return totalGravity / Moons.Count;
+            }
         }
+
+        // Exercise 2
+
+        //Benefit: This alternative solution uses LINQ's Select and Average methods, providing a concise and expressive way to calculate the average moon gravity.
+        //Drawback: While concise and readable, this approach might have a slightly higher performance overhead compared to the explicit loop in the original solution, particularly for large collections, due to the additional abstraction introduced by LINQ.
+
+        //public float AverageMoonGravity => HasMoons() ? Moons.Select(moon => moon.Gravity).Average() : 0.0f;
 
         public Planet(PlanetDto planetDto)
         {

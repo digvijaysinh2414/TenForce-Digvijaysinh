@@ -145,45 +145,56 @@ namespace Test_Taste_Console_Application.Domain.Services
 
         public void OutputAllPlanetsAndTheirAverageMoonGravityToConsole()
         {
-            //The function works the same way as the PrintAllPlanetsAndTheirMoonsToConsole function. You can find more comments there.
-            var planets = _planetService.GetAllPlanets().ToArray();
-            if (!planets.Any())
+            try
             {
-                Console.WriteLine(OutputString.NoMoonsFound);
-                return;
-            }
+                Console.WriteLine("Loading planets and calculating average moon gravity...");
 
-            var columnSizes = new[] { 20, 30 };
-            var columnLabels = new[]
-            {
-                OutputString.PlanetId, OutputString.PlanetMoonAverageGravity
-            };
-
-
-            ConsoleWriter.CreateHeader(columnLabels, columnSizes);
-
-            foreach(Planet planet in planets)
-            {
-                if(planet.HasMoons())
+                //The function works the same way as the PrintAllPlanetsAndTheirMoonsToConsole function. You can find more comments there.
+                var planets = _planetService.GetAllPlanets().ToArray();
+                if (!planets.Any())
                 {
-                    ConsoleWriter.CreateText(new string[] { $"{planet.Id}", $"{planet.AverageMoonGravity}" }, columnSizes);
+                    Console.WriteLine(OutputString.NoMoonsFound);
+                    return;
                 }
-                else
-                {
-                    ConsoleWriter.CreateText(new string[] { $"{planet.Id}", $"-" }, columnSizes);
-                }
-            }
 
-            ConsoleWriter.CreateLine(columnSizes);
-            ConsoleWriter.CreateEmptyLines(2);
+                var columnSizes = new[] { 20, 30 };
+                var columnLabels = new[]
+                {
+                    OutputString.PlanetId, OutputString.PlanetMoonAverageGravity
+                };
+
+
+                ConsoleWriter.CreateHeader(columnLabels, columnSizes);
+
+                foreach (Planet planet in planets)
+                {
+                    if (planet.HasMoons())
+                    {
+                        ConsoleWriter.CreateText(new string[] { $"{planet.Id}", $"{planet.AverageMoonGravity}" }, columnSizes);
+                    }
+                    else
+                    {
+                        ConsoleWriter.CreateText(new string[] { $"{planet.Id}", $"-" }, columnSizes);
+                    }
+                }
+
+                ConsoleWriter.CreateLine(columnSizes);
+                ConsoleWriter.CreateEmptyLines(2);
+                Console.WriteLine("Data processing completed successfully.");
+
+                /*
+                    --------------------+--------------------------------------------------
+                    Planet's Number     |Planet's Average Moon Gravity
+                    --------------------+--------------------------------------------------
+                    1                   |0.0f
+                    --------------------+--------------------------------------------------
+                */
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
             
-            /*
-                --------------------+--------------------------------------------------
-                Planet's Number     |Planet's Average Moon Gravity
-                --------------------+--------------------------------------------------
-                1                   |0.0f
-                --------------------+--------------------------------------------------
-            */
         }
     }
 }
